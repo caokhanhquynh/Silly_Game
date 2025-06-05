@@ -47,6 +47,13 @@ plant_center_y = plant_y + plant_height // 2
 plant_horizontal_bound = 20
 plant_vertical_bound = 50
 
+# dog frames
+dog_frame_path = "./assets/dog1.png"
+dog_frame_path2 = "./assets/dog2.png"
+dog_frames = [pygame.transform.scale(pygame.image.load(dog_frame_path).convert_alpha(), (250, 250)), pygame.transform.scale(pygame.image.load(dog_frame_path2).convert_alpha(), (250, 250))]
+dog_frame_index = 0
+dog_x, dog_y = 0, 325
+
 #cat frames
 cat_frame_index = 0
 cat_frame_timer = 0
@@ -102,6 +109,12 @@ while running:
     if cat_frame_timer >= cat_frame_delay:
         cat_frame_index = (cat_frame_index + 1) % len(cat_frames)
         cat_frame_timer = 0
+        dog_frame_index = (plant_frame_index + 1) % len(dog_frames)
+        dog_frame_timer = 0
+        if dog_x < screen_width:
+            dog_x += 10
+        else:
+            dog_x = 0
 
     # Draw current frame as background
     screen.blit(frame, (0, 0))
@@ -137,12 +150,15 @@ while running:
         else:
             water_visible = False
             water_sound_played = False 
-            
+    
+    # Draw dog
+    screen.blit(dog_frames[dog_frame_index], (dog_x, dog_y))
+    
     # Draw water drop
     if water_visible:
         screen.blit(water_frame, (mouse_x - 20, mouse_y -20))
         
-    # Draw cat closed eyes
+    # Draw cat
     if cat_closed_eye_visible:
         screen.blit(cat_closed_eye_frame, (cat_x, cat_y))
     else:

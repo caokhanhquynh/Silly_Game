@@ -41,12 +41,16 @@ plant_horizontal_bound = 20
 plant_vertical_bound = 50
 
 #cat frames
+cat_frame_index = 0
+cat_frame_timer = 0
+cat_frame_delay = 300
 cat_frame_path = "./assets/cat_opened_eyes.png"
-cat_frame = pygame.transform.scale(pygame.image.load(cat_frame_path).convert_alpha(), (150, 150))
+cat_frame_path_2 = "./assets/cat_opened_eyes2.png"
+cat_frames = [pygame.transform.scale(pygame.image.load(cat_frame_path).convert_alpha(), (150, 150)), pygame.transform.scale(pygame.image.load(cat_frame_path_2).convert_alpha(), (150, 150))]
 cat_closed_eye = "./assets/cat_closed_eyes.png"
 cat_closed_eye_frame = pygame.transform.scale(pygame.image.load(cat_closed_eye).convert_alpha(), (150, 150))
 cat_x, cat_y = 800, 400
-cat_width, cat_height = cat_frame.get_size()
+cat_width, cat_height = cat_frames[0].get_size()
 cat_center_x = cat_x + cat_width // 2
 cat_center_y = cat_y + cat_height // 2
 cat_horizontal_bound = 50
@@ -70,7 +74,7 @@ running = True
 while running:
     dt = clock.tick(fps)  # time since last tick in ms
     frame_timer += dt
-
+    cat_frame_timer += dt
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -79,21 +83,23 @@ while running:
             mouse_x, mouse_y = event.pos
             click_time = pygame.time.get_ticks()
 
-    # Update animation frame
+    # Animation frame
     if frame_timer >= frame_delay:
         frame_index = (frame_index + 1) % len(frames)
         frame_timer = 0
         plant_frame_index = (plant_frame_index + 1) % len(plant_frames)
         plant_frame_timer = 0
+    
+    # Cat animation frame
+    if cat_frame_timer >= cat_frame_delay:
+        cat_frame_index = (cat_frame_index + 1) % len(cat_frames)
+        cat_frame_timer = 0
 
     # Draw current frame as background
     screen.blit(frames[frame_index], (0, 0))
     screen.blit(plant_frames[plant_frame_index], (plant_x, plant_y))
     
-    # Draw cat
-    screen.blit(cat_frame, (cat_x, cat_y))
-    
-
+    # Mouse click condition
     if click_time is not None:
         current_time = pygame.time.get_ticks()
         
@@ -121,6 +127,8 @@ while running:
     # Draw cat closed eyes
     if cat_closed_eye_visible:
         screen.blit(cat_closed_eye_frame, (cat_x, cat_y))
+    else:
+        screen.blit(cat_frames[cat_frame_index], (cat_x, cat_y))
 
     # Update display
     pygame.display.flip()

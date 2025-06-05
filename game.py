@@ -3,10 +3,24 @@ import sys
 import os
 
 pygame.init()
+pygame.mixer.init()
 
 screen_width, screen_height = 700, 700
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Watering Quinnie's Tree")
+
+# background music
+bg_sound = pygame.mixer.Sound("./assets/sound.mp3")
+bg_sound.set_volume(0.1)
+bg_sound.play(loops=-1)
+
+# water sound
+water_plant_sound = pygame.mixer.Sound("./assets/water_plant_sound.mp3")
+water_plant_sound.set_volume(1.0)
+
+# cat sound
+cat_sound = pygame.mixer.Sound("./assets/cat.mp3")
+cat_sound.set_volume(1.0)
 
 # background frames
 frame_folder = "./assets/cafebg.png"
@@ -64,6 +78,8 @@ click_time = None
 
 # Main game loop
 running = True
+water_sound_played = False
+cat_sound_played = False
 while running:
     dt = clock.tick(fps)  # time since last tick in ms
     frame_timer += dt
@@ -101,18 +117,26 @@ while running:
         # Cat closed eyes condition
         if abs(dx) <= cat_horizontal_bound and abs(dy) <= cat_vertical_bound and current_time - click_time <= 500:
             cat_closed_eye_visible = True
+            if not cat_sound_played:
+                cat_sound.play()
+                cat_sound_played = True
         else:
             cat_closed_eye_visible = False
+            cat_sound_played = False
         
         # Water drop condition
         dy = mouse_y - plant_center_y
         dx = mouse_x - plant_center_x
         in_plant_range = abs(dx) <= plant_horizontal_bound and abs(dy) <= plant_vertical_bound
         if in_plant_range and current_time - click_time <= 1000:
+            if not water_sound_played:
+                water_plant_sound.play()
+                water_sound_played = True
             water_visible = True
             mouse_y += 0.3 # move the drop slowly down
         else:
             water_visible = False
+            water_sound_played = False 
             
     # Draw water drop
     if water_visible:

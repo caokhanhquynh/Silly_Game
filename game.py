@@ -7,7 +7,7 @@ pygame.mixer.init()
 
 screen_width, screen_height = 700, 700
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Watering Quinnie's Tree")
+pygame.display.set_caption("Quinnie's useless game")
 
 # background music
 bg_sound = pygame.mixer.Sound("./assets/sound.mp3")
@@ -43,7 +43,7 @@ plant_frame_index = 0
 plant_x, plant_y = 78, 335
 plant_width, plant_height = plant_frames[0].get_size()
 plant_center_x = plant_x + plant_width // 2
-plant_center_y = plant_y + plant_height // 2
+plant_center_y = plant_y + plant_height // 2 
 plant_horizontal_bound = 20
 plant_vertical_bound = 50
 
@@ -112,7 +112,7 @@ while running:
         dog_frame_index = (plant_frame_index + 1) % len(dog_frames)
         dog_frame_timer = 0
         if dog_x < screen_width:
-            dog_x += 10
+            dog_x += 20
         else:
             dog_x = 0
 
